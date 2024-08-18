@@ -4,26 +4,35 @@ on: [push, pull_request, workflow_dispatch]
 
 jobs:
   check-warnings:
-    name:    Check for New Warnings
+    name: Check for New Warnings
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
+    - name: Checkout code from PR branch
+      uses: actions/checkout@v4
+      with:
+        path: pr
+
+    - name: Checkout code from base branch
+      uses: actions/checkout@v4
+      with:
+        ref: ${{ github.event.pull_request.base.ref }}
+        path: base
 
     - name: Build on base branch
       run: |
-        git checkout ${{ github.base_ref }}
+        cd $GITHUB_WORKSPACE/base
         ./mfc.sh build > out_base.txt 2>&1
 
     - name: Build on PR branch
       run: |
-        git checkout ${{ github.head_ref }}
+        cd $GITHUB_WORKSPACE/pr
         ./mfc.sh build > out_pr.txt 2>&1
 
     - name: Compare Warnings
       run: |
-        grep '\-W' out_base.txt > warnings_base.txt
-        grep '\-W' out_pr.txt > warnings_pr.txt
+        grep '\-W' $GITHUB_WORKSPACE/base/out_base.txt > warnings_base.txt
+        grep '\-W' $GITHUB_WORKSPACE/pr/out_pr.txt > warnings_pr.txt
         comm -23 <(sort warnings_pr.txt) <(sort warnings_base.txt) > new_warnings.txt
         if [ -s new_warnings.txt ]; then
           echo "New warnings introduced!"
