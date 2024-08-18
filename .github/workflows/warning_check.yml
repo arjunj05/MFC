@@ -1,0 +1,34 @@
+name: Warning Check
+
+on: [push, pull_request, workflow_dispatch]
+
+jobs:
+  check-warnings:
+    name:    Check for New Warnings
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Build on master branch
+      run: |
+        git checkout master
+        ./mfc.sh build > out_master.txt 2>&1
+
+    - name: Build on PR branch
+      run: |
+        git checkout ${{ github.head_ref }}
+        ./mfc.sh build > out_pr.txt 2>&1
+
+    - name: Compare Warnings
+      run: |
+        grep '\-W' out_master.txt > warnings_master.txt
+        grep '\-W' out_pr.txt > warnings_pr.txt
+        comm -23 <(sort warnings_pr.txt) <(sort warnings_master.txt) > new_warnings.txt
+        if [ -s new_warnings.txt ]; then
+          echo "New warnings introduced!"
+          cat new_warnings.txt
+          exit 1
+        else
+          echo "No new warnings introduced."
+        fi
