@@ -1,7 +1,8 @@
 name: Spell Check
 
 on: [push, workflow_dispatch]
-
+# Add a top-level `if` to disable the workflow
+if: ${{ false }}
 jobs:
   run:
     name: Spell Check

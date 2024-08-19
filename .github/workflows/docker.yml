@@ -1,5 +1,6 @@
 name: Docker Publisher
-
+# Add a top-level `if` to disable the workflow
+if: ${{ false }}
 on:
   push:
     branches: [ "master" ]

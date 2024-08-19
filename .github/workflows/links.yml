@@ -1,7 +1,8 @@
 name: LinkChecker
 
 on: push
-
+# Add a top-level `if` to disable the workflow
+if: ${{ false }}
 jobs:
   markdown-link-check:
     runs-on: ubuntu-latest

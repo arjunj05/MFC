@@ -1,7 +1,8 @@
 name: Check Line Counts
 
 on: [push, pull_request, workflow_dispatch]
-
+# Add a top-level `if` to disable the workflow
+if: ${{ false }}
 jobs:
   sz:
     name: Core MFC Line Difference

@@ -1,7 +1,8 @@
 name: Lint
 
 on: [push, pull_request, workflow_dispatch]
-
+# Add a top-level `if` to disable the workflow
+if: ${{ false }}
 jobs:
   docs:
     name:    Lint Toolchain

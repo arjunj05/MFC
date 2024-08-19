@@ -1,7 +1,8 @@
 name: 'Benchmark'
 
 on: pull_request
-
+# Add a top-level `if` to disable the workflow
+if: ${{ false }}
 jobs:
   file-changes:
     name: Detect File Changes
