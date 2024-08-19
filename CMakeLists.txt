@@ -96,6 +96,9 @@ list(PREPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/toolchain/cmake")
 # are required for a successful build of MFC.
 
 if (CMAKE_Fortran_COMPILER_ID STREQUAL "GNU")
+    # Enable all standard warnings for Fortran files
+    set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -Wall")
+    
     add_compile_options(
         $<$<COMPILE_LANGUAGE:Fortran>:-ffree-line-length-none>
     )
